@@ -1,25 +1,34 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'Index',
+    component:() =>import('../views/Index.vue')
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/login',
+    name: 'Login',
+    component:() =>import('../views/Login.vue')
   }
+
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+//导入nprogress
+import Nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
+router.beforeEach((to, from, next) => {
+  Nprogress.start()
+  next()
+})
+
+router.afterEach((to,from) =>{
+  Nprogress.done()
 })
 
 export default router
