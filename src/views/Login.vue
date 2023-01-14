@@ -1,32 +1,74 @@
 <template>
   <div class="login-container">
-    <el-form ref="formRef" :model="form" class="login-form">
+    <el-form ref="formRef" :model="form" class="login-form" :rules="rules">
       <div class="title-container">
         <h3 class="title">用户登陆</h3>
       </div>
-      <el-form-item>
-        <el-icon :size="20" class="svg-container">
-          <Edit />
-        </el-icon>
-        <el-input v-model="form.name"></el-input>
+      <el-form-item prop="username">
+        <svg-icon icon="user" class="svg-container"></svg-icon>
+        <el-input v-model="form.username"></el-input>
       </el-form-item>
-      <el-form-item>
-        <el-icon :size="20" class="svg-container">
-          <Edit />
-        </el-icon>
-        <el-input v-model="form.password"></el-input>
+      <el-form-item prop="password">
+        <svg-icon icon="password" class="svg-container"></svg-icon>
+        <el-input v-model="form.password" :type="passwordType"></el-input>
+        <svg-icon
+          :icon="passwordType === 'password' ? 'eye' : 'eye-open'"
+          @click="changeType"
+        ></svg-icon>
       </el-form-item>
+      <el-button type="primary" class="login-button" @click="handleLogin"
+        >登陆</el-button
+      >
     </el-form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { Edit } from '@element-plus/icons-vue'
+import { useStore } from 'vuex';
+const store = useStore()
 const form = ref({
-  name: '',
+  username: '',
   password: ''
 })
+
+const rules = ref({
+  username: [
+    {
+      required: true,
+      message: '请输入用户名',
+      trigger: 'blur'
+    }
+  ],
+  password: [
+    {
+      required: true,
+      message: '请输入密码',
+      trigger: 'blur'
+    }
+  ]
+})
+
+const formRef = ref(null)
+const handleLogin = () => {
+  formRef.value.validate(async (valid) => {
+    if (valid) {
+      store.dispatch('app/login', form.value)      
+    } else {
+      // console.log('error submit!', fields)
+      return false
+    }
+  })
+}
+
+const passwordType = ref('password')
+const changeType = () => {
+  if (passwordType.value === 'password') {
+    passwordType.value = 'text'
+  } else {
+    passwordType.value = 'password'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -132,4 +174,3 @@ $cursor: #fff;
   }
 }
 </style>
-
