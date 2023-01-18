@@ -7,7 +7,12 @@ import 'element-plus/dist/index.css'
 import '@/styles/index.scss'
 import SvgIcon from '@/icons'
 import '@/router/permission'
+import * as ELIcons from '@element-plus/icons-vue'
 
 const app = createApp(App)
+for (const iconName in ELIcons){
+    app.component(iconName, ELIcons[iconName])
+}
+
 SvgIcon(app)
 app.use(store).use(router).mount('#app')
